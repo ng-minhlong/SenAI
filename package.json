@@ -31,7 +31,8 @@
     "react-dropzone": "^14.3.5",
     "styles": "^0.2.1",
     "swiper": "^11.2.0",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

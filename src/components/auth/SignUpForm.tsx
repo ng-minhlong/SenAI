@@ -11,6 +11,7 @@ export default function SignUpForm() {
   const [isChecked, setIsChecked] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,7 +28,7 @@ export default function SignUpForm() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_ROUTE}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, firstName, lastName })
+        body: JSON.stringify({ email, username, password, firstName, lastName })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Register failed");
@@ -144,6 +145,20 @@ export default function SignUpForm() {
                       onChange={e => setLastName(e.target.value)}
                     />
                   </div>
+                </div>
+                {/* Email */}
+                <div>
+                  <Label>
+                    Email<span className="text-error-500">*</span>
+                  </Label>
+                  <Input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email address"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                  />
                 </div>
                 {/* Username */}
                 <div>
