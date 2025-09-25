@@ -10,7 +10,7 @@ import React, { useState } from "react";
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [username, setUsername] = useState("");
+  const [UsernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ export default function SignInForm() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_ROUTE}/api/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
+          body: JSON.stringify({ UsernameOrEmail, password }),
         });
 
       const data = await res.json();
@@ -118,9 +118,9 @@ export default function SignInForm() {
               <div className="space-y-6">
                 <div>
                   <Label>
-                    Username <span className="text-error-500">*</span>{" "}
+                    Username or Email <span className="text-error-500">*</span>{" "}
                   </Label>
-                  <Input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" type="text" />
+                  <Input value={UsernameOrEmail} onChange={e => setUsernameOrEmail(e.target.value)} placeholder="Username" type="text" />
                 </div>
                 <div>
                   <Label>

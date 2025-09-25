@@ -7,6 +7,8 @@ import InfoIcon from "./info.svg";
 import ErrorIcon from "./info-hexa.svg";
 import BoltIcon from "./bolt.svg";
 import ArrowUpIcon from "./arrow-up.svg";
+import TrainingIcon from "./training.svg";
+
 import ArrowDownIcon from "./arrow-down.svg";
 import FolderIcon from "./folder.svg";
 import VideoIcon from "./videos.svg";
@@ -68,6 +70,7 @@ export {
   AlertIcon,
   InfoIcon,
   ErrorIcon,
+  TrainingIcon,
   ArrowUpIcon,
   FolderIcon,
   ArrowDownIcon,

@@ -13,7 +13,7 @@ export default function UserDropdown() {
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (!token) return;
-    fetch('http://localhost:4000/api/users/profile', {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_ROUTE}/api/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

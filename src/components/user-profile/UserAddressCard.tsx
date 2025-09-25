@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
@@ -8,11 +8,46 @@ import Label from "../form/Label";
 
 export default function UserAddressCard() {
   const { isOpen, openModal, closeModal } = useModal();
-  const handleSave = () => {
-    // Handle save logic here
-    console.log("Saving changes...");
-    closeModal();
-  };
+  const [address, setAddress] = useState<any>(null);
+  const [editAddress, setEditAddress] = useState<any>(null);
+  
+    useEffect(() => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      if (!token) return;
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_ROUTE}/api/address`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setAddress(data);
+          setEditAddress(data);
+        });
+    }, []);
+  
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEditAddress({ ...editAddress, [e.target.name]: e.target.value });
+    };
+  
+    const handleSave = (e?: React.MouseEvent<HTMLButtonElement>) => {
+      if (e) e.preventDefault();
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      if (!token) return;
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_ROUTE}/api/address/edit`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(editAddress),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setAddress(editAddress);
+          closeModal();
+        });
+    };
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -28,7 +63,7 @@ export default function UserAddressCard() {
                   Country
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  United States
+                  {address?.country || 'Not provided'}
                 </p>
               </div>
 
@@ -37,7 +72,7 @@ export default function UserAddressCard() {
                   City/State
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  Phoenix, Arizona, United States.
+                  {address?.city || 'Not provided'}
                 </p>
               </div>
 
@@ -46,7 +81,7 @@ export default function UserAddressCard() {
                   Postal Code
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  ERT 2489
+                  {address?.zip_code || 'Not provided'}
                 </p>
               </div>
 
@@ -55,7 +90,7 @@ export default function UserAddressCard() {
                   TAX ID
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  AS4568384
+                  {address?.tax_id || 'Not provided'}
                 </p>
               </div>
             </div>
@@ -99,22 +134,23 @@ export default function UserAddressCard() {
               <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                 <div>
                   <Label>Country</Label>
-                  <Input type="text" defaultValue="United States" />
+                  <Input type="text" name="country" value={editAddress?.country || ''} onChange={handleChange}  />
+
                 </div>
 
                 <div>
                   <Label>City/State</Label>
-                  <Input type="text" defaultValue="Arizona, United States." />
+                  <Input type="text" name="city" value={editAddress?.city || ''} onChange={handleChange}  />
                 </div>
 
                 <div>
                   <Label>Postal Code</Label>
-                  <Input type="text" defaultValue="ERT 2489" />
+                  <Input type="text" name="zip_code" value={editAddress?.zip_code || ''} onChange={handleChange}  />
                 </div>
 
                 <div>
                   <Label>TAX ID</Label>
-                  <Input type="text" defaultValue="AS4568384" />
+                  <Input type="text" name="tax_id" value={editAddress?.tax_id || ''} onChange={handleChange}  />
                 </div>
               </div>
             </div>
