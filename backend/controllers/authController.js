@@ -47,6 +47,12 @@ export const register = async (req, res) => {
       [id]
     );
 
+    // Insert vào user_membership
+    await connection.execute(
+      `INSERT INTO user_membership (user_id, membership_id, start_date, end_date, is_active ) VALUES (?, ?, ?, ?, ?)`,
+      [id, '1', now, '9999-12-31 23:59:59', '1']
+    );
+
     // Insert vào user_setting
     await connection.execute(
       `INSERT INTO user_setting (user_id, darkmode, language) VALUES (?, ?, ?)`,

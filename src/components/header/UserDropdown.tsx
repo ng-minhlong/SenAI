@@ -5,7 +5,6 @@ import React, { useState, useEffect } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 
-
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<{ username: string; email: string } | null>(null);
@@ -13,14 +12,34 @@ export default function UserDropdown() {
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (!token) return;
+    
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_ROUTE}/api/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 404) {
+          // Xử lý lỗi 404 - User not found
+          handleSignOut();
+          return null;
+        }
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
-        if (data.username && data.email) setUser(data);
+        if (data && data.username && data.email) {
+          setUser(data);
+        } else if (data && data.message === "User not found") {
+          // Xử lý trường hợp API trả về message lỗi
+          handleSignOut();
+        }
+      })
+      .catch((error) => {
+        console.error('Fetch user error:', error);
+        // Có thể thêm xử lý cho các lỗi khác nếu cần
       });
   }, []);
 
@@ -36,9 +55,22 @@ export default function UserDropdown() {
   function handleSignOut() {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
+      // Redirect đến signin page
       window.location.href = '/signin';
     }
   }
+
+  // Hoặc bạn có thể tách hàm sign out thành async để xử lý thêm logic
+  const signOutUser = async () => {
+    try {
+      // Có thể gọi API logout ở đây nếu cần
+      // await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      handleSignOut();
+    }
+  };
 
   return (
     <div className="relative">
@@ -99,7 +131,6 @@ export default function UserDropdown() {
               href="/dashboard/profile"
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
-              {/* ...existing code... */}
               Edit profile
             </DropdownItem>
           </li>
@@ -110,7 +141,6 @@ export default function UserDropdown() {
               href="/dashboard/profile"
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
-              {/* ...existing code... */}
               Account settings
             </DropdownItem>
           </li>
@@ -121,16 +151,14 @@ export default function UserDropdown() {
               href="/dashboard/profile"
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
-              {/* ...existing code... */}
               Support
             </DropdownItem>
           </li>
         </ul>
         <button
-          onClick={handleSignOut}
+          onClick={signOutUser} // Sử dụng hàm signOutUser thay vì handleSignOut
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300 w-full"
         >
-          {/* ...existing code... */}
           Sign out
         </button>
       </Dropdown>

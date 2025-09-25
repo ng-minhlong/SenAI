@@ -8,6 +8,7 @@ import ErrorIcon from "./info-hexa.svg";
 import BoltIcon from "./bolt.svg";
 import ArrowUpIcon from "./arrow-up.svg";
 import TrainingIcon from "./training.svg";
+import CircleIcon from "./circle.svg";
 
 import ArrowDownIcon from "./arrow-down.svg";
 import FolderIcon from "./folder.svg";
@@ -63,6 +64,7 @@ export {
   AudioIcon,
   VideoIcon,
   BoltIcon,
+  CircleIcon,
   PlusIcon,
   BoxIcon,
   CloseIcon,

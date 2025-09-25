@@ -16,7 +16,7 @@ export const getWorkspace = async (req, res) => {
     const userId = req.user.id;
 
     const [rows] = await db.execute(
-      `SELECT workspace_id, workspace_name, workspace_type, document_count, workspace_context, status
+      `SELECT workspace_id, workspace_name, workspace_type, file_count, capacity, workspace_context, status, created_at, updated_at
        FROM user_workspace 
        WHERE user_id = ?`,
       [userId]
@@ -26,7 +26,7 @@ export const getWorkspace = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    res.json(rows[0]);
+    res.json(rows); // trả về mảng
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
@@ -49,7 +49,7 @@ export const createWorkspace = async (req, res) => {
   try {
     // Thay đổi câu lệnh SQL để khớp với thứ tự các giá trị
     const sql = `
-      INSERT INTO user_workspace (user_id, status, document_count, workspace_id, workspace_name, workspace_type, workspace_context, created_at, updated_at)
+      INSERT INTO user_workspace (user_id, status, file_count, capacity, workspace_id, workspace_name, workspace_type, workspace_context, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
@@ -57,6 +57,7 @@ export const createWorkspace = async (req, res) => {
     const values = [
       userId,
       'active',
+      0,
       0,
       workspace_id, // Sử dụng workspace_id được tạo mới
       workspace_name,

@@ -7,7 +7,8 @@ interface TrainingWorkspace {
   workspace_id: string;
   workspace_name: string;
   workspace_type: string;
-  document_count: number;
+  file_count: number;
+  capacity: number;
   workspace_context: string;
   created_at: string;
   updated_at: string;
@@ -103,7 +104,11 @@ const ListTrainingWorkspace = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-500 dark:text-gray-400">
                     <div className="flex items-center">
                       <span className="font-medium mr-2">Documents:</span>
-                      {workspace.document_count}
+                      {workspace.file_count}
+                    </div>
+                    <div className="flex items-center">
+                      <span className="font-medium mr-2">Capacity:</span>
+                      {workspace.capacity}
                     </div>
                     <div className="flex items-center">
                       <span className="font-medium mr-2">Created:</span>
@@ -124,13 +129,13 @@ const ListTrainingWorkspace = () => {
                     {workspace.status.toUpperCase()}
                   </span>
                   <button
-                    onClick={() => handleNavigation(`/workspace/${workspace.workspace_id}`)}
+                    onClick={() => handleNavigation(`/dashboard/workspace/${workspace.workspace_id}`)}
                     className="bg-gray-900 hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-lg transition duration-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
                   >
                     View
                   </button>
                   <button
-                    onClick={() => handleNavigation(`/workspace/${workspace.workspace_id}`)}
+                    onClick={() => handleNavigation(`/dashboard/workspace/${workspace.workspace_id}`)}
                     className="bg-gray-900 hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-lg transition duration-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
                   >
                     Delete
@@ -144,7 +149,7 @@ const ListTrainingWorkspace = () => {
             <div className="text-center py-12">
               <div className="text-gray-500 dark:text-gray-400 text-lg">No workspaces found</div>
               <button
-                onClick={() => handleNavigation('/workspace/create')}
+                onClick={() => handleNavigation('/dashboard/workspace/create')}
                 className="mt-4 text-blue-600 hover:text-blue-700 font-medium dark:text-indigo-400 dark:hover:text-indigo-300"
               >
                 Create your first workspace
