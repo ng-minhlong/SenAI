@@ -33,6 +33,38 @@ export const getWorkspace = async (req, res) => {
 };
 
 
+export const getWorkspaceByID = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Lấy workspaceID từ req.params thay vì res.workspace_id
+    const workspaceID = req.params.workspaceID; 
+
+    // Kiểm tra xem workspaceID có tồn tại không
+    if (!workspaceID) {
+      return res.status(400).json({ message: 'Workspace ID is required' });
+    }
+
+    const [rows] = await db.execute(
+      `SELECT workspace_id, workspace_name, workspace_type, file_count, capacity, workspace_context, status, created_at, updated_at
+       FROM user_workspace 
+       WHERE user_id = ? AND workspace_id = ?`,
+      [userId, workspaceID]
+    );
+
+    if (rows.length === 0) {
+      // Trả về 404 nếu không tìm thấy workspace cho user đó
+      return res.status(404).json({ message: 'Workspace not found for this user' });
+    }
+
+    // Trả về đối tượng workspace duy nhất thay vì mảng
+    res.json(rows[0]); 
+
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
 
 export const createWorkspace = async (req, res) => {
   const userId = req.user.id;

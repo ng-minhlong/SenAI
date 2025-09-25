@@ -7,7 +7,6 @@ export const metadata: Metadata = {
   title: "Create New WorkSpace",
   description:
     "Create a new workspace",
-  // other metadata
 };
 export default function page() {
   return (
