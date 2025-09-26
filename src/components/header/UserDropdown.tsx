@@ -19,7 +19,7 @@ export default function UserDropdown() {
       },
     })
       .then((res) => {
-        if (res.status === 404) {
+        if (res.status !== 200) {
           // Xử lý lỗi 404 - User not found
           handleSignOut();
           return null;

@@ -8,6 +8,7 @@ import userRoutes from './routes/users.js';
 import profileRoutes from './routes/profile.js';
 import addressRotes from './routes/address.js';
 import workspaceRoutes from './routes/workspace.js';
+import fileRoutes from './routes/file.js';
 
 
 
@@ -20,6 +21,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/address', addressRotes);
 app.use('/api/workspace', workspaceRoutes);
+app.use('/api/file', fileRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

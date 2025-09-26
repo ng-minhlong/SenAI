@@ -12,7 +12,7 @@ export default function UserInfoCard() {
   const [workspace, setWorkSpace] = useState<any>(null);
   const [editWorkSpace, setEditWorkSpace] = useState<any>(null);
   const params = useParams(); 
-  const workspaceId = params?.id; // 👈 lấy id từ URL
+  const workspaceId = params?.id; 
 
   useEffect(() => {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;

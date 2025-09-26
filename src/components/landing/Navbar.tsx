@@ -1,12 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { close, logo, menu } from "../../public/assets";
 import { navLinks } from "@/constants";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import React from "react";
 
 const Navbar: React.FC = () => {
   const [toggle, setToggle] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      setIsLoggedIn(!!token);
+    }
+  }, []);
+
+  const SignInToggle = () => {
+    if (isLoggedIn) {
+      return (
+        <button
+          className="mt-4 py-2 px-5 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition"
+          onClick={() => { setToggle(false); router.push('/dashboard'); }}
+        >
+          Go to Dashboard
+        </button>
+      );
+    } else {
+      return (
+        <button
+          className="mt-4 py-2 px-5 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 transition"
+          onClick={() => { setToggle(false); router.push('/signin'); }}
+        >
+          Sign In
+        </button>
+      );
+    }
+  };
+
   return (
     <nav className="w-full flex py-6 justify-between items-center navbar bg-[#0a0a23]">
       <Image src={logo} alt="HooBank" width={124} height={32} />
@@ -19,12 +51,21 @@ const Navbar: React.FC = () => {
           </li>
         ))}
         <li>
-          <button
-            className="ml-6 py-2 px-5 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 transition"
-            onClick={() => router.push('/signin')}
-          >
-            Sign In
-          </button>
+          {isLoggedIn ? (
+            <button
+              className="ml-6 py-2 px-5 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition"
+              onClick={() => router.push('/dashboard')}
+            >
+              Go to Dashboard
+            </button>
+          ) : (
+            <button
+              className="ml-6 py-2 px-5 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 transition"
+              onClick={() => router.push('/signin')}
+            >
+              Sign In
+            </button>
+          )}
         </li>
       </ul>
       <div className="sm:hidden flex flex-1 justify-end items-center">
@@ -45,12 +86,7 @@ const Navbar: React.FC = () => {
               </li>
             ))}
             <li>
-              <button
-                className="mt-4 py-2 px-5 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 transition"
-                onClick={() => { setToggle(false); router.push('/signin'); }}
-              >
-                Sign In
-              </button>
+              <SignInToggle />
             </li>
           </ul>
         </div>
@@ -59,4 +95,4 @@ const Navbar: React.FC = () => {
   )
 }
 
-export default Navbar
+export default Navbar;
